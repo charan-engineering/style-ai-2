@@ -12,29 +12,36 @@ const PORT = process.env.PORT || 3000;
 // Trust proxy for rate limiting if behind a reverse proxy (e.g. Vercel/Railway)
 app.set('trust proxy', 1);
 
+const isProduction = process.env.NODE_ENV === 'production' || !!process.env.VERCEL;
+
 // Middleware
 app.use(express.json()); // Parse JSON bodies
 
-// CORS Configuration — very permissive for Vercel/Production to prevent blockages
+// CORS Configuration
 const corsOptions = {
-    origin: '*', // Allow all origins in production to avoid Vercel edge issues
+    origin: '*',
     methods: ['GET', 'POST', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
     optionsSuccessStatus: 200
 };
 app.use(cors(corsOptions));
-app.options('*', cors(corsOptions)); // Enable pre-flight across-the-board
+app.options('*', cors(corsOptions));
 
-app.use(express.static(path.join(__dirname, '../public')));
+// Only serve static files locally. Vercel handles /public via vercel.json rewrites.
+if (!isProduction) {
+    app.use(express.static(path.join(__dirname, '../public')));
+}
 
-// Rate Limiting
-const limiter = rateLimit({
-  windowMs: 60 * 1000, // 1 minute
-  max: 30, // 30 requests per minute
-  message: 'Too many requests from this IP, please try again after a minute'
-});
-app.use(limiter);
+// Rate Limiting — Disabled in production/serverless to avoid invocation overhead
+if (!isProduction) {
+    const limiter = rateLimit({
+        windowMs: 60 * 1000,
+        max: 30,
+        message: 'Too many requests'
+    });
+    app.use(limiter);
+}
 
 // API Routes
 app.use('/api/analyse', analyseRoutes);
