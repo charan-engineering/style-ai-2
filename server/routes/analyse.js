@@ -25,8 +25,8 @@ router.post('/', upload.single('image'), async (req, res) => {
         }
 
         // 1. Process image with Sharp
-        console.log('Step 1: Sharp Processing...');
-        const processedImageBuffer = await sharp(req.file.path)
+        console.log('Step 1: Sharp Processing from memory...');
+        const processedImageBuffer = await sharp(req.file.buffer)
             .resize(800, null, { withoutEnlargement: true })
             .toFormat('jpeg')
             .toBuffer();
@@ -35,7 +35,7 @@ router.post('/', upload.single('image'), async (req, res) => {
 
         // 2. Skin tone detection
         console.log('Step 2: Skin Tone Detection...');
-        const skinTone = await getSkinTone(req.file.path, processedImageBuffer);
+        const skinTone = await getSkinTone(req.file.buffer, processedImageBuffer);
 
         // 3. Gemini AI Analysis
         console.log('Step 3: Gemini API Call...');
@@ -55,9 +55,6 @@ router.post('/', upload.single('image'), async (req, res) => {
         console.log('Step 4: Appending Products...');
         const enrichedResult = await appendProducts(geminiResult, gender, skinTone);
 
-        // 5. Clean up temporary file
-        if (fs.existsSync(req.file.path)) fs.unlinkSync(req.file.path);
-
         console.log('Analysis Complete Successfully!');
         // Return full expanded response
         res.status(200).json({
@@ -76,11 +73,6 @@ router.post('/', upload.single('image'), async (req, res) => {
     } catch (error) {
         console.error('SERVER CATCH BLOCK:', error.message);
         console.error(error.stack);
-
-        // Ensure cleanup on failure
-        if (req.file && fs.existsSync(req.file.path)) {
-            try { fs.unlinkSync(req.file.path); } catch (e) { }
-        }
 
         // Return error response
         const status = error.message.includes('Invalid') || error.message.includes('required') ? 400 : 500;

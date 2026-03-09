@@ -102,20 +102,22 @@ document.addEventListener('DOMContentLoaded', () => {
             const response = await fetch(apiUrl, { method: 'POST', body: formData });
             
             if (!response.ok) {
-                let errorMessage = `Server error: ${response.status}`;
+                let errorMessage = `Server Error: ${response.status}`;
                 try {
-                    // Clone the response to read it safely
-                    const errorResponse = await response.clone();
+                    // Clone the response IMMEDIATELY. .clone() is SYNCHRONOUS.
+                    const clone = response.clone();
+                    
+                    // Try to parse as JSON first
                     try {
-                        const errorData = await errorResponse.json();
+                        const errorData = await clone.json();
                         errorMessage = errorData.error || errorMessage;
-                    } catch(e) {
-                        const textError = await errorResponse.text();
-                        // If it's a long HTML error page, truncate it
-                        errorMessage = textError.length > 100 ? `${errorMessage} (HTML Response)` : textError;
+                    } catch (jsonErr) {
+                        // Fallback to text if JSON fails
+                        const textError = await response.text();
+                        errorMessage = textError.length > 100 ? `${errorMessage} (Check Logs)` : textError;
                     }
-                } catch(err) {
-                    console.error('Error parsing server error:', err);
+                } catch (err) {
+                    console.error('Final fallback error parsing:', err);
                 }
                 throw new Error(errorMessage);
             }
