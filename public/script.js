@@ -94,11 +94,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 formData.append('context', contextText);
             }
 
-            const response = await fetch('/api/analyse', { method: 'POST', body: formData });
+            // Use absolute URL in production to prevent vercel routing issues
+            const apiUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+                ? '/api/analyse' 
+                : `${window.location.origin}/api/analyse`;
+
+            const response = await fetch(apiUrl, { method: 'POST', body: formData });
+            
+            if (!response.ok) {
+                // Try to get JSON error message, fallback to text if not JSON
+                let errorMessage = 'Failed to process image';
+                try {
+                    const errorData = await response.json();
+                    errorMessage = errorData.error || errorMessage;
+                } catch(e) {
+                    const textError = await response.text();
+                    errorMessage = textError || errorMessage;
+                }
+                throw new Error(errorMessage);
+            }
+
             const data = await response.json();
             clearInterval(textInterval);
-
-            if (!response.ok) throw new Error(data.error || 'Failed to process image');
 
             renderResults(data);
 
