@@ -2,18 +2,22 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
+const os = require('os');
+
 const MAX_FILE_SIZE_MB = parseInt(process.env.MAX_FILE_SIZE_MB || '10', 10);
 
-// Ensure tmp directory exists
-const tmpDir = path.join(__dirname, '../../tmp');
-if (!fs.existsSync(tmpDir)) {
-    fs.mkdirSync(tmpDir, { recursive: true });
+// Use the OS temp directory (critical for Vercel/Serverless)
+const tmpDir = os.tmpdir();
+// No need to mkdirSync for os.tmpdir() usually, but safe to keep check if we use a subfolder
+const uploadDir = path.join(tmpDir, 'style-ai-uploads');
+if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
 }
 
 // Multer storage configuration
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, tmpDir); // Save temporarily
+        cb(null, uploadDir); // Save temporarily
     },
     filename: function (req, file, cb) {
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);

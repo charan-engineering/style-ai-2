@@ -102,14 +102,20 @@ document.addEventListener('DOMContentLoaded', () => {
             const response = await fetch(apiUrl, { method: 'POST', body: formData });
             
             if (!response.ok) {
-                // Try to get JSON error message, fallback to text if not JSON
-                let errorMessage = 'Failed to process image';
+                let errorMessage = `Server error: ${response.status}`;
                 try {
-                    const errorData = await response.json();
-                    errorMessage = errorData.error || errorMessage;
-                } catch(e) {
-                    const textError = await response.text();
-                    errorMessage = textError || errorMessage;
+                    // Clone the response to read it safely
+                    const errorResponse = await response.clone();
+                    try {
+                        const errorData = await errorResponse.json();
+                        errorMessage = errorData.error || errorMessage;
+                    } catch(e) {
+                        const textError = await errorResponse.text();
+                        // If it's a long HTML error page, truncate it
+                        errorMessage = textError.length > 100 ? `${errorMessage} (HTML Response)` : textError;
+                    }
+                } catch(err) {
+                    console.error('Error parsing server error:', err);
                 }
                 throw new Error(errorMessage);
             }
