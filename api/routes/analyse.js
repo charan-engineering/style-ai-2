@@ -1,11 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const fs = require('fs');
 const upload = require('../middleware/upload');
 const { getSkinTone } = require('../services/skinTone');
 const { analyzeStyle } = require('../services/gemini');
 const { appendProducts } = require('../services/products');
-const sharp = require('sharp');
+const Jimp = require('jimp');
 
 router.post('/', upload.single('image'), async (req, res) => {
     try {
@@ -24,13 +23,14 @@ router.post('/', upload.single('image'), async (req, res) => {
             return res.status(400).json({ error: 'Gender is required and must be male, female, or nonbinary.' });
         }
 
-        // 1. Process image with Sharp
-        console.log('Step 1: Sharp Processing from memory...');
-        const processedImageBuffer = await sharp(req.file.buffer)
-            .resize(800, null, { withoutEnlargement: true })
-            .toFormat('jpeg')
-            .toBuffer();
-
+        // 1. Process image with Jimp
+        console.log('Step 1: Jimp Processing from memory...');
+        const image = await Jimp.read(req.file.buffer);
+        
+        // Resize to 800px width, aspect ratio maintained
+        image.resize(800, Jimp.AUTO);
+        
+        const processedImageBuffer = await image.getBufferAsync(Jimp.MIME_JPEG);
         const base64Image = processedImageBuffer.toString('base64');
 
         // 2. Skin tone detection

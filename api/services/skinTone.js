@@ -1,8 +1,7 @@
-const sharp = require('sharp');
+const Jimp = require('jimp');
 
 // Classify RGB into Fair, Medium, Olive, Deep
 function classifySkinTone(r, g, b) {
-    // Simple heuristic. Real version would use trained color classification or larger map
     const luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b;
 
     let category = 'Medium';
@@ -21,35 +20,28 @@ function classifySkinTone(r, g, b) {
     return { category, rgb: [r, g, b] };
 }
 
-async function getSkinTone(filePath, buffer) {
+async function getSkinTone(buffer) {
     try {
-        const image = sharp(buffer || filePath);
-        const metadata = await image.metadata();
+        const image = await Jimp.read(buffer);
+        
+        const imgWidth = image.bitmap.width;
+        const imgHeight = image.bitmap.height;
 
-        const imgWidth = metadata.width;
-        const imgHeight = metadata.height;
+        // Sample a 50x50 region from the center
+        const sampleSize = Math.min(50, imgWidth, imgHeight);
+        const left = Math.floor(imgWidth / 2 - sampleSize / 2);
+        const top = Math.floor(imgHeight / 2 - sampleSize / 2);
 
-        // Sample a 50x50 region from the center of the image
-        const sampleSize = 50;
-        const left = Math.max(0, Math.floor(imgWidth / 2 - sampleSize / 2));
-        const top = Math.max(0, Math.floor(imgHeight / 2 - sampleSize / 2));
-        const width = Math.min(sampleSize, imgWidth - left);
-        const height = Math.min(sampleSize, imgHeight - top);
-
-        // Extract the center region and get raw pixel data (RGB)
-        const { data } = await sharp(buffer || filePath)
-            .extract({ left, top, width, height })
-            .removeAlpha()
-            .raw()
-            .toBuffer({ resolveWithObject: true });
+        // Crop to the center region
+        image.crop(left, top, sampleSize, sampleSize);
 
         let totalR = 0, totalG = 0, totalB = 0;
-        const pixelCount = data.length / 3;
+        const pixelCount = image.bitmap.data.length / 4; // Jimp data is RGBA
 
-        for (let i = 0; i < data.length; i += 3) {
-            totalR += data[i];
-            totalG += data[i + 1];
-            totalB += data[i + 2];
+        for (let i = 0; i < image.bitmap.data.length; i += 4) {
+            totalR += image.bitmap.data[i];
+            totalG += image.bitmap.data[i + 1];
+            totalB += image.bitmap.data[i + 2];
         }
 
         const avgR = Math.round(totalR / pixelCount);
@@ -60,8 +52,7 @@ async function getSkinTone(filePath, buffer) {
 
     } catch (error) {
         console.error('Skin tone detection error:', error);
-        // Ultimate fallback if sharp fails
-        return classifySkinTone(210, 180, 150); // Default to Fair/Medium
+        return classifySkinTone(210, 180, 150);
     }
 }
 
