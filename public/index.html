@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StyleAI — AI-Powered Personal Fashion Stylist</title>
+    <meta name="description"
+        content="Upload your photo to discover skin tone personalized outfits, accessories, hairstyles, and curated shopping recommendations.">
+    <!-- Tailwind via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            500: '#14b8a6',
+                            600: '#0d9488',
+                            900: '#134e4a',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body
+    class="bg-gray-900 text-gray-100 min-h-screen antialiased flex flex-col font-sans selection:bg-brand-500 selection:text-white">
+
+    <!-- Header -->
+    <header class="w-full relative z-10 glass backdrop-blur-md border-b border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex justify-between items-center">
+            <div class="flex items-center space-x-3 group cursor-pointer">
+                <div
+                    class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-500 flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform duration-300">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z">
+                        </path>
+                    </svg>
+                </div>
+                <h1 class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">
+                    StyleAI</h1>
+            </div>
+            <nav class="hidden md:flex space-x-8 text-sm font-medium">
+                <a href="#" class="text-gray-300 hover:text-white transition-colors">How it works</a>
+                <a href="#" class="text-gray-300 hover:text-white transition-colors">Testimonials</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="flex-grow w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 relative">
+        <!-- Background Orbs -->
+        <div
+            class="absolute top-0 right-1/4 w-96 h-96 bg-brand-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 pointer-events-none animate-blob">
+        </div>
+        <div
+            class="absolute top-1/4 left-1/4 w-96 h-96 bg-indigo-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 pointer-events-none animate-blob animation-delay-2000">
+        </div>
+        <div
+            class="absolute -bottom-32 left-1/2 w-96 h-96 bg-fuchsia-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 pointer-events-none animate-blob animation-delay-4000">
+        </div>
+
+        <!-- Section 1: Upload (Active by default) -->
+        <section id="upload-section"
+            class="relative z-10 flex flex-col items-center justify-center space-y-12 slide-up-fade-in mt-10">
+            <div class="text-center space-y-4 max-w-2xl">
+                <h2 class="text-4xl md:text-5xl font-extrabold tracking-tight">
+                    Discover your <span
+                        class="text-transparent bg-clip-text bg-gradient-to-r from-brand-500 to-indigo-400">Perfect
+                        Style</span>
+                </h2>
+                <p class="text-lg text-gray-400">
+                    Upload a photo, tell us your gender, and let our AI analyze your skin tone to craft personalized
+                    outfits and accessories just for you.
+                </p>
+            </div>
+
+            <div class="w-full max-w-lg glass rounded-2xl p-8 border border-gray-800 shadow-2xl relative">
+
+                <form id="style-form" class="space-y-8">
+
+                    <!-- Gender Selection -->
+                    <div class="space-y-3">
+                        <label class="block text-sm font-medium text-gray-300">Identity</label>
+                        <div class="grid grid-cols-3 gap-3">
+                            <label class="cursor-pointer">
+                                <input type="radio" name="gender" value="male" class="peer sr-only" required>
+                                <div
+                                    class="text-center px-4 py-3 rounded-xl border border-gray-700 bg-gray-800/50 peer-checked:bg-brand-600/20 peer-checked:border-brand-500 peer-checked:text-brand-400 hover:border-gray-500 transition-all text-sm font-medium">
+                                    Male</div>
+                            </label>
+                            <label class="cursor-pointer">
+                                <input type="radio" name="gender" value="female" class="peer sr-only" required>
+                                <div
+                                    class="text-center px-4 py-3 rounded-xl border border-gray-700 bg-gray-800/50 peer-checked:bg-brand-600/20 peer-checked:border-brand-500 peer-checked:text-brand-400 hover:border-gray-500 transition-all text-sm font-medium">
+                                    Female</div>
+                            </label>
+                            <label class="cursor-pointer">
+                                <input type="radio" name="gender" value="nonbinary" class="peer sr-only" required>
+                                <div
+                                    class="text-center px-4 py-2 rounded-xl border border-gray-700 bg-gray-800/50 peer-checked:bg-brand-600/20 peer-checked:border-brand-500 peer-checked:text-brand-400 hover:border-gray-500 transition-all text-sm font-medium flex items-center justify-center">
+                                    Non-binary</div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Drag & Drop -->
+                    <div class="space-y-3">
+                        <label class="block text-sm font-medium text-gray-300">Your Photo</label>
+                        <div id="drop-zone"
+                            class="mt-1 flex justify-center px-6 pt-10 pb-12 border-2 border-gray-700 border-dashed rounded-xl hover:border-brand-500 hover:bg-gray-800/30 transition-all cursor-pointer group relative overflow-hidden">
+                            <div class="space-y-2 text-center relative z-10" id="drop-content">
+                                <svg class="mx-auto h-12 w-12 text-gray-500 group-hover:text-brand-400 transition-colors"
+                                    stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                                    <path
+                                        d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                                <div class="flex text-sm text-gray-400 justify-center">
+                                    <label for="file-upload"
+                                        class="relative rounded-md font-medium text-brand-500 hover:text-brand-400 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-brand-500 cursor-pointer">
+                                        <span>Upload a file</span>
+                                        <input id="file-upload" name="image" type="file" class="sr-only"
+                                            accept="image/jpeg,image/png,image/webp,image/gif" required>
+                                    </label>
+                                    <p class="pl-1">or drag and drop</p>
+                                </div>
+                                <p class="text-xs text-gray-500">PNG, JPG, WEBP up to 10MB</p>
+                            </div>
+                            <img id="image-preview"
+                                class="absolute inset-0 w-full h-full object-cover hidden rounded-xl opacity-90 z-0" />
+                            <button type="button" id="remove-image"
+                                class="absolute top-2 right-2 bg-red-600/80 text-white p-1 rounded-full hidden z-20 hover:bg-red-500 backdrop-blur-sm">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <button type="submit" id="submit-btn"
+                        class="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-medium text-white bg-brand-600 hover:bg-brand-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500 focus:ring-offset-gray-900 transition-all transform hover:-translate-y-0.5">
+                        Analyze Style
+                    </button>
+                    <div id="error-msg" class="text-red-400 text-sm font-medium text-center hidden"></div>
+                </form>
+            </div>
+        </section>
+
+        <!-- Section 2: Processing -->
+        <section id="processing-section"
+            class="hidden relative z-10 flex flex-col items-center justify-center space-y-8 min-h-[50vh]">
+            <div class="relative w-32 h-32 flex items-center justify-center">
+                <div class="absolute inset-0 border-t-4 border-brand-500 rounded-full animate-spin"></div>
+                <div
+                    class="absolute inset-2 border-r-4 border-indigo-500 rounded-full animate-spin animation-delay-500">
+                </div>
+                <div
+                    class="w-16 h-16 rounded-full bg-gradient-to-tr from-brand-600 to-indigo-500 flex items-center justify-center mask-image-circle animate-pulse">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z">
+                        </path>
+                    </svg>
+                </div>
+            </div>
+            <div class="text-center space-y-2">
+                <h3 class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-gray-100 to-gray-400">
+                    Analyzing Your Unique Style...</h3>
+                <p class="text-gray-400 animate-pulse" id="processing-text">Running skin tone detection and generating
+                    outfit harmony maps</p>
+            </div>
+        </section>
+
+        <!-- Section 3: Results & Shopping -->
+        <section id="results-section" class="hidden relative z-10 flex flex-col space-y-12 slide-up-fade-in pb-20">
+            <!-- Top Controls -->
+            <div
+                class="flex justify-between items-center bg-gray-800/50 backdrop-blur-md px-6 py-4 rounded-xl border border-gray-700">
+                <h2 class="text-2xl font-bold">Your Style Profile</h2>
+                <button id="reset-btn"
+                    class="text-sm px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg font-medium transition-colors">Start
+                    Over</button>
+            </div>
+
+            <!-- Dashboard Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+                <!-- Left Column -->
+                <div class="md:col-span-1 space-y-8">
+                    <!-- Skin Tone & Colors -->
+                    <div class="glass p-6 rounded-2xl border border-gray-800 space-y-6">
+                        <div class="flex items-center space-x-4">
+                            <div id="skin-tone-swatch"
+                                class="w-16 h-16 rounded-full shadow-inner border border-gray-600"></div>
+                            <div>
+                                <p class="text-sm text-gray-400 font-medium">Detected Skin Tone</p>
+                                <p id="skin-tone-category" class="text-xl font-bold text-white">Medium</p>
+                            </div>
+                        </div>
+
+                        <hr class="border-gray-700">
+
+                        <div class="space-y-3">
+                            <p class="text-sm text-gray-400 font-medium">Your Harmony Palette</p>
+                            <div class="grid grid-cols-3 gap-3">
+                                <div class="space-y-1">
+                                    <div id="color-primary"
+                                        class="w-full h-12 rounded-lg shadow-sm border border-gray-700"></div>
+                                    <p class="text-[10px] text-center text-gray-400 uppercase tracking-wide">Primary</p>
+                                </div>
+                                <div class="space-y-1">
+                                    <div id="color-secondary"
+                                        class="w-full h-12 rounded-lg shadow-sm border border-gray-700"></div>
+                                    <p class="text-[10px] text-center text-gray-400 uppercase tracking-wide">Secondary
+                                    </p>
+                                </div>
+                                <div class="space-y-1">
+                                    <div id="color-accent"
+                                        class="w-full h-12 rounded-lg shadow-sm border border-gray-700"></div>
+                                    <p class="text-[10px] text-center text-gray-400 uppercase tracking-wide">Accent</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Grooming -->
+                    <div class="glass p-6 rounded-2xl border border-gray-800 space-y-4">
+                        <h3 class="text-lg font-bold flex items-center space-x-2">
+                            <svg class="w-5 h-5 text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                            </svg>
+                            <span>Hair & Accessories</span>
+                        </h3>
+                        <div class="bg-gray-800/50 rounded-xl p-4 border border-gray-700/50">
+                            <p class="font-medium text-white" id="hairstyle-name">Textured Crop</p>
+                            <p class="text-sm text-gray-400 mt-1" id="hairstyle-howto">Use matte clay and push forward.
+                            </p>
+                        </div>
+                        <div class="flex flex-wrap gap-2" id="accessories-list">
+                            <!-- Injected Badges -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column (Outfit & Rationale) -->
+                <div class="md:col-span-2 space-y-8">
+                    <!-- Rationale -->
+                    <div class="glass p-6 rounded-2xl border border-gray-800 relative overflow-hidden">
+                        <div
+                            class="absolute inset-0 bg-gradient-to-br from-brand-600/10 to-transparent pointer-events-none">
+                        </div>
+                        <h3 class="text-lg font-bold flex items-center space-x-2 mb-3">
+                            <svg class="w-5 h-5 text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span>Why It Works</span>
+                        </h3>
+                        <p id="rationale-text" class="text-gray-300 leading-relaxed font-light text-lg">
+                            Loading rationale...
+                        </p>
+                    </div>
+
+                    <!-- Outfit Box -->
+                    <div class="space-y-4">
+                        <h3 class="text-xl font-bold">Suggested Daily Look</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4" id="outfit-grid">
+                            <!-- Injected Outfit Cards -->
+                        </div>
+                    </div>
+
+                    <!-- Shop Section -->
+                    <div class="pt-6 border-t border-gray-800">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3
+                                class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-brand-400 to-indigo-400">
+                                Shop The Look</h3>
+                            <span
+                                class="text-xs font-semibold bg-gray-800 px-3 py-1 rounded-full border border-gray-700 text-gray-300">Curated
+                                Matches</span>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="products-grid">
+                            <!-- Injected Product Cards -->
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="border-t border-gray-800 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 py-6 flex flex-col md:flex-row items-center justify-between">
+            <p class="text-sm text-gray-500">© 2026 Antigravity StyleAI. All rights reserved.</p>
+            <div class="flex space-x-4 mt-4 md:mt-0 text-sm">
+                <a href="#" class="text-gray-500 hover:text-white transition-colors">Privacy</a>
+                <a href="#" class="text-gray-500 hover:text-white transition-colors">Terms</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
