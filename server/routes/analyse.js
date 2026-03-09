@@ -13,7 +13,7 @@ router.post('/', upload.single('image'), async (req, res) => {
             return res.status(400).json({ error: 'Image file is required.' });
         }
 
-        const { gender } = req.body;
+        const { gender, context } = req.body;
         if (!gender || !['male', 'female', 'nonbinary'].includes(gender.toLowerCase())) {
             fs.unlinkSync(req.file.path);
             return res.status(400).json({ error: 'Gender is required and must be male, female, or nonbinary.' });
@@ -31,8 +31,7 @@ router.post('/', upload.single('image'), async (req, res) => {
         const skinTone = await getSkinTone(req.file.path, processedImageBuffer);
 
         // 3. Gemini AI Analysis
-        // Implement auto-retry inside analysis function
-        const geminiResult = await analyzeStyle(base64Image, gender, skinTone);
+        const geminiResult = await analyzeStyle(base64Image, gender, skinTone, context);
 
         if (!geminiResult || !geminiResult.suggestedOutfit) {
             throw new Error('Invalid response structure from Gemini.');
@@ -44,10 +43,12 @@ router.post('/', upload.single('image'), async (req, res) => {
         // 5. Clean up temporary file
         fs.unlinkSync(req.file.path);
 
-        // Return successfully
+        // Return full expanded response
         res.status(200).json({
             skinTone: skinTone,
-            dressCodes: enrichedResult.dressCodes || ["Formal", "Business", "Casual", "Party"],
+            bodyType: enrichedResult.bodyType || "Not detected",
+            seasonalTone: enrichedResult.seasonalTone || "Neutral",
+            dressCodes: enrichedResult.dressCodes || ["Smart Casual", "Business", "Casual"],
             suggestedOutfit: enrichedResult.suggestedOutfit,
             hairstyle: enrichedResult.hairstyle,
             accessories: enrichedResult.accessories,
