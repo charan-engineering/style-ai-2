@@ -9,17 +9,23 @@ const sharp = require('sharp');
 
 router.post('/', upload.single('image'), async (req, res) => {
     try {
+        console.log('--- Processing Request ---');
         if (!req.file) {
+            console.error('No file received');
             return res.status(400).json({ error: 'Image file is required.' });
         }
 
         const { gender, context } = req.body;
+        console.log(`Gender: ${gender}, Context length: ${context ? context.length : 0}`);
+
         if (!gender || !['male', 'female', 'nonbinary'].includes(gender.toLowerCase())) {
-            fs.unlinkSync(req.file.path);
+            console.error('Invalid gender:', gender);
+            if (fs.existsSync(req.file.path)) fs.unlinkSync(req.file.path);
             return res.status(400).json({ error: 'Gender is required and must be male, female, or nonbinary.' });
         }
 
         // 1. Process image with Sharp
+        console.log('Step 1: Sharp Processing...');
         const processedImageBuffer = await sharp(req.file.path)
             .resize(800, null, { withoutEnlargement: true })
             .toFormat('jpeg')
@@ -28,21 +34,31 @@ router.post('/', upload.single('image'), async (req, res) => {
         const base64Image = processedImageBuffer.toString('base64');
 
         // 2. Skin tone detection
+        console.log('Step 2: Skin Tone Detection...');
         const skinTone = await getSkinTone(req.file.path, processedImageBuffer);
 
         // 3. Gemini AI Analysis
+        console.log('Step 3: Gemini API Call...');
+        if (!process.env.GEMINI_API_KEY) {
+            console.error('CRITICAL: GEMINI_API_KEY is not set in environment!');
+            throw new Error('Server configuration error: Gemini key missing.');
+        }
+        
         const geminiResult = await analyzeStyle(base64Image, gender, skinTone, context);
 
         if (!geminiResult || !geminiResult.suggestedOutfit) {
-            throw new Error('Invalid response structure from Gemini.');
+            console.error('Gemini returned invalid structure:', geminiResult);
+            throw new Error('AI analysis failed to provide an outfit.');
         }
 
         // 4. Product Recommendation Engine
+        console.log('Step 4: Appending Products...');
         const enrichedResult = await appendProducts(geminiResult, gender, skinTone);
 
         // 5. Clean up temporary file
-        fs.unlinkSync(req.file.path);
+        if (fs.existsSync(req.file.path)) fs.unlinkSync(req.file.path);
 
+        console.log('Analysis Complete Successfully!');
         // Return full expanded response
         res.status(200).json({
             skinTone: skinTone,
@@ -58,7 +74,8 @@ router.post('/', upload.single('image'), async (req, res) => {
         });
 
     } catch (error) {
-        console.error('Analyse Error:', error);
+        console.error('SERVER CATCH BLOCK:', error.message);
+        console.error(error.stack);
 
         // Ensure cleanup on failure
         if (req.file && fs.existsSync(req.file.path)) {
@@ -66,8 +83,11 @@ router.post('/', upload.single('image'), async (req, res) => {
         }
 
         // Return error response
-        const status = error.message.includes('Invalid') ? 400 : 500;
-        res.status(status).json({ error: error.message || 'Internal Server Error' });
+        const status = error.message.includes('Invalid') || error.message.includes('required') ? 400 : 500;
+        res.status(status).json({ 
+            error: `Stylist Error: ${error.message}`,
+            tip: "Check your Vercel Logs for the full traceback."
+        });
     }
 });
 
