@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How It Works — StyleAI</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            200: '#99f6e4',
+                            300: '#5eead4',
+                            400: '#2dd4bf',
+                            500: '#14b8a6',
+                            600: '#0d9488',
+                            700: '#0f766e',
+                            800: '#115e59',
+                            900: '#134e4a',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Outfit', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+</head>
+
+<body class="bg-gray-950 text-gray-100 min-h-screen flex flex-col font-sans selection:bg-brand-500 selection:text-white">
+
+    <!-- Header -->
+    <header class="w-full relative z-10 glass-header border-b border-white/5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <a href="index.html" class="flex items-center space-x-3 group cursor-pointer">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 via-violet-500 to-fuchsia-500 flex items-center justify-center shadow-lg shadow-brand-600/20 group-hover:scale-110 transition-all duration-300">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z">
+                        </path>
+                    </svg>
+                </div>
+                <h1 class="text-xl font-bold font-display bg-clip-text text-transparent bg-gradient-to-r from-white via-gray-200 to-gray-500">
+                    StyleAI</h1>
+            </a>
+            <nav class="flex items-center space-x-6 text-sm font-medium">
+                <a href="index.html" class="px-4 py-2 rounded-full bg-white/5 border border-white/10 text-gray-300 hover:bg-white/10 hover:text-white transition-all">← Back to Home</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="flex-grow w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 relative">
+        <!-- Background Orbs -->
+        <div class="absolute top-0 right-1/4 w-[500px] h-[500px] bg-brand-600 rounded-full mix-blend-multiply filter blur-[120px] opacity-10 pointer-events-none"></div>
+        <div class="absolute bottom-0 left-0 w-[400px] h-[400px] bg-violet-600 rounded-full mix-blend-multiply filter blur-[120px] opacity-10 pointer-events-none"></div>
+
+        <section class="relative z-10 space-y-16 slide-up-fade-in">
+            <!-- Hero -->
+            <div class="text-center space-y-4">
+                <h2 class="text-4xl md:text-5xl font-extrabold tracking-tight font-display">
+                    How <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-400 to-violet-400">StyleAI</span> Works
+                </h2>
+                <p class="text-gray-400 max-w-2xl mx-auto text-lg">
+                    A deep dive into the technology and processes that power your personal digital stylist.
+                </p>
+            </div>
+
+            <!-- Tech Stack -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="glass-card p-8 rounded-2xl border border-white/5 space-y-4">
+                    <div class="w-12 h-12 rounded-xl bg-brand-500/10 flex items-center justify-center text-brand-400 mb-6">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-white font-display">Frontend Stack</h3>
+                    <ul class="space-y-3 text-gray-400 text-sm">
+                        <li class="flex items-start">
+                            <span class="text-brand-400 mr-2">✦</span>
+                            <span><strong>HTML5 & CSS3</strong>: Custom layouts and glassmorphism.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-brand-400 mr-2">✦</span>
+                            <span><strong>Tailwind CSS</strong>: High-performance utility styling.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-brand-400 mr-2">✦</span>
+                            <span><strong>Vanilla JS</strong>: Fast, interactive UI without framework overhead.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="glass-card p-8 rounded-2xl border border-white/5 space-y-4">
+                    <div class="w-12 h-12 rounded-xl bg-violet-500/10 flex items-center justify-center text-violet-400 mb-6">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v4a2 2 0 00-2-2"/></svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-white font-display">Backend Stack</h3>
+                    <ul class="space-y-3 text-gray-400 text-sm">
+                        <li class="flex items-start">
+                            <span class="text-violet-400 mr-2">✦</span>
+                            <span><strong>Node.js & Express</strong>: The core API engine.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-violet-400 mr-2">✦</span>
+                            <span><strong>Gemini 2.0 Flash</strong>: State-of-the-art vision & logic AI.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-violet-400 mr-2">✦</span>
+                            <span><strong>Jimp</strong>: Pure-JS image processing for stability.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Workflow Steps -->
+            <div class="space-y-8">
+                <h3 class="text-2xl font-bold text-white font-display text-center">The Analytical Process</h3>
+                
+                <div class="relative space-y-12 before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-white/10 before:to-transparent">
+                    
+                    <!-- Step 1 -->
+                    <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+                        <div class="flex items-center justify-center w-10 h-10 rounded-full border border-white/10 bg-gray-950 group-hover:border-brand-500/50 transition-all duration-500 shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">
+                            <span class="text-xs font-bold">01</span>
+                        </div>
+                        <div class="w-[calc(100%-4rem)] md:w-[45%] glass-card p-6 rounded-2xl border border-white/5 transition-all hover:border-white/10">
+                            <h4 class="font-bold text-white mb-2">Multi-Input Processing</h4>
+                            <p class="text-sm text-gray-400">The app captures your photo and occasion details. The occasion acts as a "style prompt" that steers the AI's creative logic.</p>
+                        </div>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+                        <div class="flex items-center justify-center w-10 h-10 rounded-full border border-white/10 bg-gray-950 group-hover:border-brand-500/50 transition-all duration-500 shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">
+                            <span class="text-xs font-bold">02</span>
+                        </div>
+                        <div class="w-[calc(100%-4rem)] md:w-[45%] glass-card p-6 rounded-2xl border border-white/5 transition-all hover:border-white/10">
+                            <h4 class="font-bold text-white mb-2">Vision Analysis</h4>
+                            <p class="text-sm text-gray-400">Jimp resizes the image and samples your skin tone by analyzing pixel clusters at the center of the photo to categorize your undertone.</p>
+                        </div>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+                        <div class="flex items-center justify-center w-10 h-10 rounded-full border border-white/10 bg-gray-950 group-hover:border-brand-500/50 transition-all duration-500 shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">
+                            <span class="text-xs font-bold">03</span>
+                        </div>
+                        <div class="w-[calc(100%-4rem)] md:w-[45%] glass-card p-6 rounded-2xl border border-white/5 transition-all hover:border-white/10">
+                            <h4 class="font-bold text-white mb-2">Gemini Intelligence</h4>
+                            <p class="text-sm text-gray-400">Google Gemini analyzes your physical traits and occasion to generate a structured JSON profile containing color palettes and outfit logic.</p>
+                        </div>
+                    </div>
+
+                    <!-- Step 4 -->
+                    <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+                        <div class="flex items-center justify-center w-10 h-10 rounded-full border border-white/10 bg-gray-950 group-hover:border-brand-500/50 transition-all duration-500 shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">
+                            <span class="text-xs font-bold">04</span>
+                        </div>
+                        <div class="w-[calc(100%-4rem)] md:w-[45%] glass-card p-6 rounded-2xl border border-white/5 transition-all hover:border-white/10">
+                            <h4 class="font-bold text-white mb-2">Product Synthesis</h4>
+                            <p class="text-sm text-gray-400">Suggested garments are transformed into functional Google Shopping links, providing a direct bridge from AI advice to real shopping.</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Footer Action -->
+            <div class="text-center pt-8">
+                <a href="index.html" class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-brand-600 to-violet-600 rounded-xl font-bold hover:shadow-lg hover:shadow-brand-600/20 transition-all transform hover:-translate-y-1">
+                    Ready to Style? Go to Home →
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="border-t border-white/5 py-8 mt-12">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <p class="text-xs text-gray-600">© 2026 Antigravity StyleAI. Developed for RTRP Documentation.</p>
+        </div>
+    </footer>
+
+</body>
+</html>
